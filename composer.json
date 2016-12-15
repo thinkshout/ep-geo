@@ -1,0 +1,13 @@
+{
+    "name": "thinkshout/ep-geo",
+    "description": "Geo query integration for ElasticPress",
+    "type": "wordpress-plugin",
+    "license": "GPLv2",
+    "authors": [
+        {
+            "name": "Jaymz Rhime",
+            "email": "wxactly@gmail.com"
+        }
+    ],
+    "require": {}
+}
