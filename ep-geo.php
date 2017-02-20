@@ -13,7 +13,7 @@
  */
 
 /**
- * Setup all module filters
+ * Setup all feature filters
  */
 function ep_geo_setup() {
 	add_filter( 'ep_config_mapping', 'ep_geo_config_mapping' );
@@ -91,23 +91,23 @@ function ep_geo_formatted_args( $formatted_args, $args ) {
 }
 
 /**
- * Output module box summary
+ * Output feature box summary
  */
 function ep_geo_box_summary() {
 	echo '<p>' . esc_html_e( 'Integrate geo location data with ElasticSearch, and enable geo queries.', 'ep-geo' ) . '</p>';
 }
 
 /**
- * Output module box long
+ * Output feature box long
  */
 function ep_geo_box_long() {
 	echo '<p>' . esc_html_e( 'Important note: Your geolocation data must be stored in post meta fields named "latitude" and "longitude". They should be plain text fields with lat/lon represented as floats.', 'ep-geo' ) . '</p>';
 }
 
-ep_register_module( 'ep_geo', array(
-	'title'                    => 'Geo',
-	'setup_cb'                 => 'ep_geo_setup',
-	'module_box_summary_cb'    => 'ep_geo_box_summary',
-	'module_box_long_cb'       => 'ep_geo_box_long',
-	'requires_install_reindex' => true,
+ep_register_feature( 'ep_geo', array(
+	'title'                     => 'Geo',
+	'setup_cb'                  => 'ep_geo_setup',
+	'feature_box_summary_cb'    => 'ep_geo_box_summary',
+	'feature_box_long_cb'       => 'ep_geo_box_long',
+	'requires_install_reindex'  => true,
 ) );
