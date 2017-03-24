@@ -85,6 +85,15 @@ function ep_geo_formatted_args( $formatted_args, $args ) {
 		}
 
 		$formatted_args['post_filter']['bool']['filter']['geo_distance'] = $geo_distance;
+
+		if ( isset( $args['geo_query']['order'] ) ) {
+			array_unshift( $formatted_args['sort'], array(
+				'_geo_distance' => array(
+					'pin.location' => $geo_distance['pin.location'],
+					'order' => $args['geo_query']['order'],
+				),
+			) );
+		}
 	}
 
 	return $formatted_args;
