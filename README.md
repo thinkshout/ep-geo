@@ -22,6 +22,7 @@ new WP_Query( array(
 		'lat'      => 45.5230622,
 		'lon'      => - 122.67648159999999,
 		'distance' => '30km',
+		'order'    => 'asc',
 	),
 ) );
 ```
