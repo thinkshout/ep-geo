@@ -33,6 +33,7 @@ function ep_geo_config_mapping( $mapping ) {
 		'properties' => array(
 			'location' => array(
 				'type' => 'geo_point',
+				'ignore_malformed' => true,
 			),
 		),
 	);
