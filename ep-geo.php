@@ -29,11 +29,23 @@ function ep_geo_setup() {
  * @return array
  */
 function ep_geo_config_mapping( $mapping ) {
-	$mapping['mappings']['post']['properties']['pin'] = array(
+	// Index geo_point:
+	$mapping['mappings']['post']['properties']['geo_point'] = array(
 		'properties' => array(
 			'location' => array(
 				'type' => 'geo_point',
 				'ignore_malformed' => true,
+			),
+		),
+	);
+
+	// Index geo_shape:
+	$mapping['mappings']['post']['properties']['geo_shape'] = array(
+		'properties' => array(
+			'location' => array(
+				'type' => 'geo_shape',
+				// https://github.com/elastic/elasticsearch/issues/23747
+				// 'ignore_malformed' => true,
 			),
 		),
 	);
@@ -50,13 +62,27 @@ function ep_geo_config_mapping( $mapping ) {
  * @return array
  */
 function ep_geo_post_sync_args( $post_args, $post_id ) {
+	// Sync geo_point:
+	$geo_point = [
+		'location' => [],
+	];
+
 	if ( isset( $post_args['post_meta']['latitude'][0] ) ) {
-		$post_args['pin']['location']['lat'] = $post_args['post_meta']['latitude'][0];
+		$geo_point['location']['lat'] = $post_args['post_meta']['latitude'][0];
 	}
 
 	if ( isset( $post_args['post_meta']['longitude'][0] ) ) {
-		$post_args['pin']['location']['lon'] = $post_args['post_meta']['longitude'][0];
+		$geo_point['location']['lon'] = $post_args['post_meta']['longitude'][0];
 	}
+
+	$post_args['geo_point'] = apply_filters( 'ep_geo_post_sync_geo_point', $geo_point, $post_args, $post_id );
+
+	// Sync geo_shape:
+	$geo_shape = [
+		'location' => [],
+	];
+
+	$post_args['geo_shape'] = apply_filters( 'ep_geo_post_sync_geo_shape', $geo_shape, $post_args, $post_id );
 
 	return $post_args;
 }
@@ -78,11 +104,11 @@ function ep_geo_formatted_args( $formatted_args, $args ) {
 		}
 
 		if ( isset( $args['geo_query']['lat'] ) ) {
-			$geo_distance['pin.location']['lat'] = $args['geo_query']['lat'];
+			$geo_distance['geo_point.location']['lat'] = $args['geo_query']['lat'];
 		}
 
 		if ( isset( $args['geo_query']['lon'] ) ) {
-			$geo_distance['pin.location']['lon'] = $args['geo_query']['lon'];
+			$geo_distance['geo_point.location']['lon'] = $args['geo_query']['lon'];
 		}
 
 		$formatted_args['post_filter']['bool']['filter']['geo_distance'] = $geo_distance;
@@ -90,7 +116,7 @@ function ep_geo_formatted_args( $formatted_args, $args ) {
 		if ( isset( $args['geo_query']['order'] ) ) {
 			array_unshift( $formatted_args['sort'], array(
 				'_geo_distance' => array(
-					'pin.location' => $geo_distance['pin.location'],
+					'geo_point.location' => $geo_distance['geo_point.location'],
 					'order' => $args['geo_query']['order'],
 				),
 			) );
