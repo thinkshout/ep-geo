@@ -96,6 +96,23 @@ function ep_geo_post_sync_args( $post_args, $post_id ) {
  * @return array
  */
 function ep_geo_formatted_args( $formatted_args, $args ) {
+	if ( isset( $args['geo_shape'] ) ) {
+		$formatted_args['post_filter']['bool']['filter']['geo_shape'] = $args['geo_shape'];
+	}
+
+	if ( isset( $args['geo_bounding_box'] ) ) {
+		$formatted_args['post_filter']['bool']['filter']['geo_bounding_box'] = $args['geo_bounding_box'];
+	}
+
+	if ( isset( $args['geo_distance'] ) ) {
+		$formatted_args['post_filter']['bool']['filter']['geo_distance'] = $args['geo_distance'];
+	}
+
+	if ( isset( $args['geo_polygon'] ) ) {
+		$formatted_args['post_filter']['bool']['filter']['geo_polygon'] = $args['geo_polygon'];
+	}
+
+	// Legacy "geo_query" filter (deprecated):
 	if ( isset( $args['geo_query'] ) ) {
 		$geo_distance = array();
 
