@@ -98,18 +98,26 @@ function ep_geo_post_sync_args( $post_args, $post_id ) {
 function ep_geo_formatted_args( $formatted_args, $args ) {
 	if ( isset( $args['geo_shape'] ) ) {
 		$formatted_args['post_filter']['bool']['filter']['geo_shape'] = $args['geo_shape'];
-	}
-
-	if ( isset( $args['geo_bounding_box'] ) ) {
+	} elseif ( isset( $args['geo_bounding_box'] ) ) {
 		$formatted_args['post_filter']['bool']['filter']['geo_bounding_box'] = $args['geo_bounding_box'];
-	}
-
-	if ( isset( $args['geo_distance'] ) ) {
+	} elseif ( isset( $args['geo_polygon'] ) ) {
+		$formatted_args['post_filter']['bool']['filter']['geo_polygon'] = $args['geo_polygon'];
+	} elseif ( isset( $args['geo_distance'] ) ) {
 		$formatted_args['post_filter']['bool']['filter']['geo_distance'] = $args['geo_distance'];
 	}
 
-	if ( isset( $args['geo_polygon'] ) ) {
-		$formatted_args['post_filter']['bool']['filter']['geo_polygon'] = $args['geo_polygon'];
+	if ( ! empty( $formatted_args['sort'] ) ) {
+		foreach ( $formatted_args['sort'] as $key => &$sort ) {
+			if ( isset( $sort['geo_distance'] ) ) {
+				$sort['_geo_distance'] = $sort['geo_distance'];
+
+				if ( isset( $args['geo_distance']['geo_point.location'] ) ) {
+					$sort['_geo_distance']['geo_point.location'] = $args['geo_distance']['geo_point.location'];
+				}
+
+				unset( $sort['geo_distance'] );
+			}
+		}
 	}
 
 	// Legacy "geo_query" filter (deprecated):
