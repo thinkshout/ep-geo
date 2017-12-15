@@ -30,7 +30,7 @@ new WP_Query( array(
 ) );
 ```
 
-If your latitude and longitude data is stored somewhere else, or if you need to calculate or preprocess the geo_point location, it's configurable with a hook:
+If your latitude and longitude data is stored somewhere else, or if you need to calculate or preprocess the geo_point location, it's configurable with a WordPress hook:
 
 ```php
 /**

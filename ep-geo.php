@@ -176,7 +176,8 @@ function ep_geo_box_summary() {
  * Output feature box long
  */
 function ep_geo_box_long() {
-	echo '<p>' . esc_html_e( 'Important note: Your geolocation data must be stored in post meta fields named "latitude" and "longitude". They should be plain text fields with lat/lon represented as floats.', 'ep-geo' ) . '</p>';
+	echo '<p>' . esc_html_e( 'By default, this plugin looks in post meta fields named "latitude" and "longitude". They should be plain text fields with lat/lon represented as floats.', 'ep-geo' ) . '</p>';
+	echo '<p>' . esc_html_e( 'If your latitude and longitude data is stored somewhere else, or if you need to calculate or preprocess the geo_point location, it\'s configurable with a WordPress hook.', 'ep-geo' ) . '</p>';
 }
 
 ep_register_feature( 'ep_geo', array(
