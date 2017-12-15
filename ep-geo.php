@@ -67,12 +67,26 @@ function ep_geo_post_sync_args( $post_args, $post_id ) {
 		'location' => [],
 	];
 
-	if ( isset( $post_args['post_meta']['latitude'][0] ) ) {
-		$geo_point['location']['lat'] = $post_args['post_meta']['latitude'][0];
-	}
+	if ( isset( $post_args['meta'] ) ) {
+		$meta = $post_args['meta'];
 
-	if ( isset( $post_args['post_meta']['longitude'][0] ) ) {
-		$geo_point['location']['lon'] = $post_args['post_meta']['longitude'][0];
+		if ( isset( $meta['latitude'][0]['value'] ) ) {
+			$geo_point['location']['lat'] = $meta['latitude'][0]['value'];
+		}
+
+		if ( isset( $meta['longitude'][0]['value'] ) ) {
+			$geo_point['location']['lon'] = $meta['longitude'][0]['value'];
+		}
+	} elseif ( isset( $post_args['post_meta'] ) ) {
+		$post_meta = $post_args['post_meta'];
+
+		if ( isset( $post_meta['latitude'][0] ) ) {
+			$geo_point['location']['lat'] = $post_meta['latitude'][0];
+		}
+
+		if ( isset( $post_meta['longitude'][0] ) ) {
+			$geo_point['location']['lon'] = $post_meta['longitude'][0];
+		}
 	}
 
 	$post_args['geo_point'] = apply_filters( 'ep_geo_post_sync_geo_point', $geo_point, $post_args, $post_id );
