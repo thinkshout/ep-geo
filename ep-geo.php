@@ -70,14 +70,15 @@ function ep_geo_post_sync_args( $post_args, $post_id ) {
 	if ( isset( $post_args['meta'] ) ) {
 		$meta = $post_args['meta'];
 
-		if ( isset( $meta['latitude'][0]['value'] ) ) {
-			$geo_point['location']['lat'] = $meta['latitude'][0]['value'];
+		if ( ! empty( $meta['latitude'][0]['double'] ) ) {
+			$geo_point['location']['lat'] = $meta['latitude'][0]['double'];
 		}
 
-		if ( isset( $meta['longitude'][0]['value'] ) ) {
-			$geo_point['location']['lon'] = $meta['longitude'][0]['value'];
+		if ( ! empty( $meta['longitude'][0]['double'] ) ) {
+			$geo_point['location']['lon'] = $meta['longitude'][0]['double'];
 		}
 	} elseif ( isset( $post_args['post_meta'] ) ) {
+		// Handle legacy post_meta property, for older versions of elasticpress.
 		$post_meta = $post_args['post_meta'];
 
 		if ( isset( $post_meta['latitude'][0] ) ) {
