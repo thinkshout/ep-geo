@@ -44,8 +44,7 @@ function ep_geo_config_mapping( $mapping ) {
 		'properties' => array(
 			'location' => array(
 				'type' => 'geo_shape',
-				// https://github.com/elastic/elasticsearch/issues/23747
-				// 'ignore_malformed' => true,
+				'ignore_malformed' => true,
 			),
 		),
 	);
