@@ -180,10 +180,38 @@ function ep_geo_box_long() {
 	echo '<p>' . esc_html_e( 'If your latitude and longitude data is stored somewhere else, or if you need to calculate or preprocess the geo_point location, it\'s configurable with a WordPress hook.', 'ep-geo' ) . '</p>';
 }
 
-ep_register_feature( 'ep_geo', array(
-	'title'                     => 'Geo',
-	'setup_cb'                  => 'ep_geo_setup',
-	'feature_box_summary_cb'    => 'ep_geo_box_summary',
-	'feature_box_long_cb'       => 'ep_geo_box_long',
-	'requires_install_reindex'  => true,
-) );
+if(class_exists('ElasticPress\\Feature')) {
+	class EP_Geo extends ElasticPress\Feature {
+
+		public function __construct() {
+			$this->slug = 'ep_geo';
+			$this->requires_install_reindex = true;
+			$this->title = 'Geo';
+			parent::__construct();
+		}
+
+		public function setup() {
+			ep_geo_setup();
+		}
+
+		public function output_feature_box_summary() {
+			ep_geo_box_summary();
+		}
+
+		public function output_feature_box_long() {
+			ep_geo_box_long();
+		}
+	}
+
+	ElasticPress\Features::factory()->register_feature(
+		new EP_Geo()
+	);
+}elseif(function_exists('ep_register_feature')){
+	ep_register_feature( 'ep_geo', array(
+		'title' => 'Geo',
+		'setup_cb' => 'ep_geo_setup',
+		'feature_box_summary_cb' => 'ep_geo_box_summary',
+		'feature_box_long_cb' => 'ep_geo_box_long',
+		'requires_install_reindex' => true,
+	) );
+}
