@@ -214,4 +214,12 @@ if(class_exists('ElasticPress\\Feature')) {
 		'feature_box_long_cb' => 'ep_geo_box_long',
 		'requires_install_reindex' => true,
 	) );
+} else {
+	add_action('admin_notices', function() { ?>
+
+		<div class="notice notice-error">
+			<p><?php _e('ElasticPress Geo is enabled but not effective. It requires <a href="https://wordpress.org/plugins/elasticpress/" target="_blank" rel="noopener">ElasticPress</a> in order to work.', 'ep-geo'); ?></p>
+		</div>
+
+	<?php });
 }
