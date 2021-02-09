@@ -7,7 +7,7 @@
  * Author URI:      https://thinkshout.com/
  * Text Domain:     ep-geo
  * Domain Path:     /languages
- * Version:         0.1.0
+ * Version:         0.1.2
  *
  * @package         Ep_Geo
  */
@@ -29,26 +29,47 @@ function ep_geo_setup() {
  * @return array
  */
 function ep_geo_config_mapping( $mapping ) {
-	// Index geo_point:
-	$mapping['mappings']['post']['properties']['geo_point'] = array(
-		'properties' => array(
-			'location' => array(
-				'type' => 'geo_point',
-				'ignore_malformed' => true,
+	if ( !class_exists('ElasticPress\\Elasticsearch') || version_compare( \ElasticPress\Elasticsearch::factory()->get_elasticsearch_version(), '7.0', '<' ) ) {
+		// Index geo_point:
+		$mapping[ 'mappings' ]['post']['properties']['geo_point'] = array(
+			'properties' => array(
+				'location' => array(
+					'type' => 'geo_point',
+					'ignore_malformed' => true,
+				),
 			),
-		),
-	);
+		);
 
-	// Index geo_shape:
-	$mapping['mappings']['post']['properties']['geo_shape'] = array(
-		'properties' => array(
-			'location' => array(
-				'type' => 'geo_shape',
-				'ignore_malformed' => true,
+		// Index geo_shape:
+		$mapping[ 'mappings' ]['post']['properties']['geo_shape'] = array(
+			'properties' => array(
+				'location' => array(
+					'type' => 'geo_shape',
+					'ignore_malformed' => true,
+				),
 			),
-		),
-	);
+		);
+	} else {
+		// Index geo_point:
+		$mapping[ 'mappings' ]['properties']['geo_point'] = array(
+			'properties' => array(
+				'location' => array(
+					'type' => 'geo_point',
+					'ignore_malformed' => true,
+				),
+			),
+		);
 
+		// Index geo_shape:
+		$mapping[ 'mappings' ]['properties']['geo_shape'] = array(
+			'properties' => array(
+				'location' => array(
+					'type' => 'geo_shape',
+					'ignore_malformed' => true,
+				),
+			),
+		);
+    }
 	return $mapping;
 }
 
@@ -180,10 +201,46 @@ function ep_geo_box_long() {
 	echo '<p>' . esc_html_e( 'If your latitude and longitude data is stored somewhere else, or if you need to calculate or preprocess the geo_point location, it\'s configurable with a WordPress hook.', 'ep-geo' ) . '</p>';
 }
 
-ep_register_feature( 'ep_geo', array(
-	'title'                     => 'Geo',
-	'setup_cb'                  => 'ep_geo_setup',
-	'feature_box_summary_cb'    => 'ep_geo_box_summary',
-	'feature_box_long_cb'       => 'ep_geo_box_long',
-	'requires_install_reindex'  => true,
-) );
+if(class_exists('ElasticPress\\Feature')) {
+	class EP_Geo extends ElasticPress\Feature {
+
+		public function __construct() {
+			$this->slug = 'ep_geo';
+			$this->requires_install_reindex = true;
+			$this->title = 'Geo';
+			parent::__construct();
+		}
+
+		public function setup() {
+			ep_geo_setup();
+		}
+
+		public function output_feature_box_summary() {
+			ep_geo_box_summary();
+		}
+
+		public function output_feature_box_long() {
+			ep_geo_box_long();
+		}
+	}
+
+	ElasticPress\Features::factory()->register_feature(
+		new EP_Geo()
+	);
+}elseif(function_exists('ep_register_feature')){
+	ep_register_feature( 'ep_geo', array(
+		'title' => 'Geo',
+		'setup_cb' => 'ep_geo_setup',
+		'feature_box_summary_cb' => 'ep_geo_box_summary',
+		'feature_box_long_cb' => 'ep_geo_box_long',
+		'requires_install_reindex' => true,
+	) );
+} else {
+	add_action('admin_notices', function() { ?>
+
+		<div class="notice notice-error">
+			<p><?php _e('ElasticPress Geo is enabled but not effective. It requires <a href="https://wordpress.org/plugins/elasticpress/" target="_blank" rel="noopener">ElasticPress</a> in order to work.', 'ep-geo'); ?></p>
+		</div>
+
+	<?php });
+}
