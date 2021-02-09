@@ -7,7 +7,7 @@
  * Author URI:      https://thinkshout.com/
  * Text Domain:     ep-geo
  * Domain Path:     /languages
- * Version:         0.1.1
+ * Version:         0.1.2
  *
  * @package         Ep_Geo
  */
@@ -29,26 +29,47 @@ function ep_geo_setup() {
  * @return array
  */
 function ep_geo_config_mapping( $mapping ) {
-	// Index geo_point:
-	$mapping['mappings']['post']['properties']['geo_point'] = array(
-		'properties' => array(
-			'location' => array(
-				'type' => 'geo_point',
-				'ignore_malformed' => true,
+	if ( !class_exists('ElasticPress\\Elasticsearch') || version_compare( \ElasticPress\Elasticsearch::factory()->get_elasticsearch_version(), '7.0', '<' ) ) {
+		// Index geo_point:
+		$mapping[ 'mappings' ]['post']['properties']['geo_point'] = array(
+			'properties' => array(
+				'location' => array(
+					'type' => 'geo_point',
+					'ignore_malformed' => true,
+				),
 			),
-		),
-	);
+		);
 
-	// Index geo_shape:
-	$mapping['mappings']['post']['properties']['geo_shape'] = array(
-		'properties' => array(
-			'location' => array(
-				'type' => 'geo_shape',
-				'ignore_malformed' => true,
+		// Index geo_shape:
+		$mapping[ 'mappings' ]['post']['properties']['geo_shape'] = array(
+			'properties' => array(
+				'location' => array(
+					'type' => 'geo_shape',
+					'ignore_malformed' => true,
+				),
 			),
-		),
-	);
+		);
+	} else {
+		// Index geo_point:
+		$mapping[ 'mappings' ]['properties']['geo_point'] = array(
+			'properties' => array(
+				'location' => array(
+					'type' => 'geo_point',
+					'ignore_malformed' => true,
+				),
+			),
+		);
 
+		// Index geo_shape:
+		$mapping[ 'mappings' ]['properties']['geo_shape'] = array(
+			'properties' => array(
+				'location' => array(
+					'type' => 'geo_shape',
+					'ignore_malformed' => true,
+				),
+			),
+		);
+    }
 	return $mapping;
 }
 
