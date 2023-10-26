@@ -180,6 +180,10 @@ function ep_geo_box_long() {
 	echo '<p>' . esc_html_e( 'If your latitude and longitude data is stored somewhere else, or if you need to calculate or preprocess the geo_point location, it\'s configurable with a WordPress hook.', 'ep-geo' ) . '</p>';
 }
 
+// Check if ElasticPress is active.
+if ( ! function_exists( 'ep_register_feature' ) ) {
+	return;
+}
 ep_register_feature( 'ep_geo', array(
 	'title'                     => 'Geo',
 	'setup_cb'                  => 'ep_geo_setup',
