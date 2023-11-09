@@ -7,7 +7,7 @@
  * Author URI:      https://thinkshout.com/
  * Text Domain:     ep-geo
  * Domain Path:     /languages
- * Version:         0.1.0
+ * Version:         0.1.3
  *
  * @package         Ep_Geo
  */
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( ! class_exists( '\ElasticPress\Feature' ) ) {
+if ( ! class_exists( 'ElasticPress\\Feature' ) ) {
 	exit; // Exit if ElasticPress is not installed.
 }
 
@@ -70,26 +70,48 @@ class ElasticPressGeoFeature extends \ElasticPress\Feature {
 	 * @return array
 	 */
 	public function ep_geo_config_mapping( $mapping ) {
+
+		if ( !class_exists('ElasticPress\\Elasticsearch') || version_compare( \ElasticPress\Elasticsearch::factory()->get_elasticsearch_version(), '7.0', '<' ) ) {
 		// Index geo_point:
-		$mapping['mappings']['post']['properties']['geo_point'] = array(
-			'properties' => array(
-				'location' => array(
-					'type' => 'geo_point',
-					'ignore_malformed' => true,
+			$mapping[ 'mappings' ]['post']['properties']['geo_point'] = array(
+				'properties' => array(
+					'location' => array(
+						'type' => 'geo_point',
+						'ignore_malformed' => true,
+					),
 				),
-			),
-		);
+			);
 
-		// Index geo_shape:
-		$mapping['mappings']['post']['properties']['geo_shape'] = array(
-			'properties' => array(
-				'location' => array(
-					'type' => 'geo_shape',
-					'ignore_malformed' => true,
+			// Index geo_shape:
+			$mapping[ 'mappings' ]['post']['properties']['geo_shape'] = array(
+				'properties' => array(
+					'location' => array(
+						'type' => 'geo_shape',
+						'ignore_malformed' => true,
+					),
 				),
-			),
-		);
+			);
+		} else {
+			// Index geo_point:
+			$mapping[ 'mappings' ]['properties']['geo_point'] = array(
+				'properties' => array(
+					'location' => array(
+						'type' => 'geo_point',
+						'ignore_malformed' => true,
+					),
+				),
+			);
 
+			// Index geo_shape:
+			$mapping[ 'mappings' ]['properties']['geo_shape'] = array(
+				'properties' => array(
+					'location' => array(
+						'type' => 'geo_shape',
+						'ignore_malformed' => true,
+					),
+				),
+			);
+		}
 		return $mapping;
 	}
 
@@ -208,3 +230,7 @@ class ElasticPressGeoFeature extends \ElasticPress\Feature {
 		return $formatted_args;
 	}
 }
+
+ElasticPress\Features::factory()->register_feature(
+	new EP_Geo()
+);
