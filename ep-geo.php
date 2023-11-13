@@ -232,5 +232,5 @@ class ElasticPressGeoFeature extends \ElasticPress\Feature {
 }
 
 ElasticPress\Features::factory()->register_feature(
-	new EP_Geo()
+	new ElasticPressGeoFeature()
 );
