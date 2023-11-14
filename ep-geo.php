@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'ElasticPress\\Feature' ) ) {
-	exit; // Exit if ElasticPress is not installed.
+	return; // Exit if ElasticPress is not installed.
 }
 
 /**
