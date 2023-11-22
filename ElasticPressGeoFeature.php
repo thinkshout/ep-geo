@@ -37,9 +37,9 @@ class ElasticPressGeoFeature extends \ElasticPress\Feature {
 	 * Setup all feature filters
 	 */
 	public function setup() {
-		add_filter( 'ep_config_mapping', [ $this, 'ep_geo_config_mapping' ] );
-		add_filter( 'ep_post_sync_args', [ $this, 'ep_geo_post_sync_args' ] );
-		add_filter( 'ep_formatted_args', [ $this, 'ep_geo_formatted_args' ] );
+		add_filter( 'ep_config_mapping', [ $this, 'ep_geo_config_mapping' ], 10, 2 );
+		add_filter( 'ep_post_sync_args', [ $this, 'ep_geo_post_sync_args' ], 10, 2 );
+		add_filter( 'ep_formatted_args', [ $this, 'ep_geo_formatted_args' ], 10, 2 );
 	}
 
 	/**
