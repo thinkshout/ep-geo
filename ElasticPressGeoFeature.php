@@ -132,14 +132,14 @@ class ElasticPressGeoFeature extends \ElasticPress\Feature {
 			}
 		} elseif ( !empty( get_post_meta( $post_id, 'latitude', true ) ) ) {
 
-			if ( ! empty( $meta['latitude'][0]['double'] ) ) {
-				$lat = get_post_meta( $post_id, 'latitude', true );
+			$lat = get_post_meta( $post_id, 'latitude', true );
+			if ( ! empty( $lat ) ) {
 				$geo_point['location']['lat'] = $lat;
 				$post_args['meta']['latitude'][0]['double'] = $lat;
 			}
 
-			if ( ! empty( $meta['longitude'][0]['double'] ) ) {
-				$lon = get_post_meta( $post_id, 'longitude', true );
+			$lon = get_post_meta( $post_id, 'longitude', true );
+			if ( ! empty( $lon ) ) {
 				$geo_point['location']['lon'] = $lon;
 				$post_args['meta']['longitude'][0]['double'] = $lon;
 			}
