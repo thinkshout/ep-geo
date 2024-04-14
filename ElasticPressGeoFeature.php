@@ -130,6 +130,19 @@ class ElasticPressGeoFeature extends \ElasticPress\Feature {
 			if ( isset( $post_meta['longitude'][0] ) ) {
 				$geo_point['location']['lon'] = $post_meta['longitude'][0];
 			}
+		} elseif ( !empty( get_post_meta( $post_id, 'latitude', true ) ) ) {
+
+			if ( ! empty( $meta['latitude'][0]['double'] ) ) {
+				$lat = get_post_meta( $post_id, 'latitude', true );
+				$geo_point['location']['lat'] = $lat;
+				$post_args['meta']['latitude'][0]['double'] = $lat;
+			}
+
+			if ( ! empty( $meta['longitude'][0]['double'] ) ) {
+				$lon = get_post_meta( $post_id, 'longitude', true );
+				$geo_point['location']['lon'] = $lon;
+				$post_args['meta']['longitude'][0]['double'] = $lon;
+			}
 		}
 
 		$post_args['geo_point'] = apply_filters( 'ep_geo_post_sync_geo_point', $geo_point, $post_args, $post_id );
