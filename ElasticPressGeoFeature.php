@@ -109,7 +109,7 @@ class ElasticPressGeoFeature extends \ElasticPress\Feature {
 			'location' => [],
 		];
 
-		if ( isset( $post_args['meta'] ) ) {
+		if ( isset( $post_args['meta'] ) && isset( $post_args['meta']['latitude'] ) ) {
 			$meta = $post_args['meta'];
 
 			if ( ! empty( $meta['latitude'][0]['double'] ) ) {
@@ -119,7 +119,7 @@ class ElasticPressGeoFeature extends \ElasticPress\Feature {
 			if ( ! empty( $meta['longitude'][0]['double'] ) ) {
 				$geo_point['location']['lon'] = $meta['longitude'][0]['double'];
 			}
-		} elseif ( isset( $post_args['post_meta'] ) ) {
+		} elseif ( isset( $post_args['post_meta'] ) && isset( $post_args['post_meta']['latitude'] ) ) {
 			// Handle legacy post_meta property, for older versions of elasticpress.
 			$post_meta = $post_args['post_meta'];
 
