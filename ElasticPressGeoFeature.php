@@ -113,32 +113,32 @@ class ElasticPressGeoFeature extends \ElasticPress\Feature {
 			$meta = $post_args['meta'];
 
 			if ( ! empty( $meta['latitude'][0]['double'] ) ) {
-				$geo_point['location']['lat'] = $meta['latitude'][0]['double'];
+				$geo_point['location']['lat'] =  (float) number_format( $meta['latitude'][0]['double'], 6, '.', '' );
 			}
 
 			if ( ! empty( $meta['longitude'][0]['double'] ) ) {
-				$geo_point['location']['lon'] = $meta['longitude'][0]['double'];
+				$geo_point['location']['lon'] = (float) number_format( $meta['longitude'][0]['double'], 6, '.', '' );
 			}
 		} elseif ( isset( $post_args['post_meta'] ) && isset( $post_args['post_meta']['latitude'] ) ) {
 			// Handle legacy post_meta property, for older versions of elasticpress.
 			$post_meta = $post_args['post_meta'];
 
 			if ( isset( $post_meta['latitude'][0] ) ) {
-				$geo_point['location']['lat'] = $post_meta['latitude'][0];
+				$geo_point['location']['lat'] = (float) number_format( $post_meta['latitude'][0], 6, '.', '' );
 			}
 
 			if ( isset( $post_meta['longitude'][0] ) ) {
-				$geo_point['location']['lon'] = $post_meta['longitude'][0];
+				$geo_point['location']['lon'] = (float) number_format( $post_meta['longitude'][0], 6, '.', '' );
 			}
 		} elseif ( !empty( get_post_meta( $post_id, 'latitude', true ) ) ) {
 
-			$lat = get_post_meta( $post_id, 'latitude', true );
+			$lat = (float) number_format( get_post_meta( $post_id, 'latitude', true ), 6, '.', '' );
 			if ( ! empty( $lat ) ) {
 				$geo_point['location']['lat'] = $lat;
 				$post_args['meta']['latitude'][0]['double'] = $lat;
 			}
 
-			$lon = get_post_meta( $post_id, 'longitude', true );
+			$lon = (float) number_format( get_post_meta( $post_id, 'longitude', true ), 6, '.', '' );
 			if ( ! empty( $lon ) ) {
 				$geo_point['location']['lon'] = $lon;
 				$post_args['meta']['longitude'][0]['double'] = $lon;
